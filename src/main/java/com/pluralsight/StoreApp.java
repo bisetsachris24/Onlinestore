@@ -27,7 +27,7 @@ public class StoreApp {
             System.out.println("      WELCOME TO THE ONLINE STORE");
             System.out.println("─────────────────────────────────");
             System.out.println("1) Display Products");
-            System.out.println("2) Display Cart");
+            System.out.println("2) Display Cart (" + cart.size() + " item(s))");
             System.out.println("3) Exit");
             System.out.println("─────────────────────────────────");
             System.out.print("Choose an option: ");
@@ -39,7 +39,7 @@ public class StoreApp {
                     showProductsScreen();
                     break;
                 case "2":
-                    System.out.println("(Cart screen coming next...)");
+                    showCartScreen();
                     break;
                 case "3":
                     System.out.println("\nThanks for shopping with us. Goodbye!");
@@ -59,7 +59,7 @@ public class StoreApp {
         List<Product> displayList = new ArrayList<>(inventory);
 
         while (onProductsScreen) {
-            System.out.println("\n─");
+            System.out.println("\n─────────────────────────────────────────────────────────────────");
             System.out.println("  PRODUCTS");
             System.out.println("─────────────────────────────────────────────────────────────────");
             System.out.printf("  %-8s | %-38s | %-8s | %s%n", "SKU", "Name", "Price", "Department");
@@ -84,7 +84,7 @@ public class StoreApp {
                     addProductToCart(displayList);
                     break;
                 case "B":
-                    displayList = new ArrayList<>(inventory); // reset search
+                    displayList = new ArrayList<>(inventory);
                     onProductsScreen = false;
                     break;
                 default:
@@ -167,5 +167,99 @@ public class StoreApp {
             }
         }
         System.out.println("SKU not found. Please try again.");
+    }
+
+    // ─────────────────────────────────────────────
+    //  SCREEN 3 – CART
+    // ─────────────────────────────────────────────
+    private void showCartScreen() {
+        boolean onCartScreen = true;
+
+        while (onCartScreen) {
+            System.out.println("\n─────────────────────────────────────────────────────────────────");
+            System.out.println("  YOUR CART");
+            System.out.println("─────────────────────────────────────────────────────────────────");
+
+            if (cart.isEmpty()) {
+                System.out.println("  Your cart is empty.");
+            } else {
+                System.out.printf("  %-8s | %-38s | %s%n", "SKU", "Name", "Price");
+                System.out.println("─────────────────────────────────────────────────────────────────");
+                for (Product p : cart) {
+                    System.out.println("  " + p);
+                }
+                System.out.println("─────────────────────────────────────────────────────────────────");
+                System.out.printf("  TOTAL: $%.2f%n", getCartTotal());
+            }
+
+            System.out.println("─────────────────────────────────────────────────────────────────");
+            System.out.println("C) Check Out");
+            System.out.println("R) Remove a product");
+            System.out.println("B) Back to Home");
+            System.out.println("─────────────────────────────────────────────────────────────────");
+            System.out.print("Choose an option: ");
+
+            String choice = scanner.nextLine().trim().toUpperCase();
+
+            switch (choice) {
+                case "C":
+                    checkOut();
+                    onCartScreen = false;
+                    break;
+                case "R":
+                    removeProductFromCart();
+                    break;
+                case "B":
+                    onCartScreen = false;
+                    break;
+                default:
+                    System.out.println("Invalid option.");
+            }
+        }
+    }
+
+    private void removeProductFromCart() {
+        if (cart.isEmpty()) {
+            System.out.println("Your cart is already empty.");
+            return;
+        }
+        System.out.print("Enter the SKU of the product to remove: ");
+        String sku = scanner.nextLine().trim().toUpperCase();
+
+        for (int i = 0; i < cart.size(); i++) {
+            if (cart.get(i).getSku().equalsIgnoreCase(sku)) {
+                Product removed = cart.remove(i);
+                System.out.println("\"" + removed.getName() + "\" removed from your cart.");
+                return;
+            }
+        }
+        System.out.println("SKU not found in your cart.");
+    }
+
+    private void checkOut() {
+        if (cart.isEmpty()) {
+            System.out.println("Your cart is empty. Nothing to check out.");
+            return;
+        }
+        System.out.println("\n─────────────────────────────────────────────────────────────────");
+        System.out.println("  ORDER SUMMARY");
+        System.out.println("─────────────────────────────────────────────────────────────────");
+        for (Product p : cart) {
+            System.out.println("  " + p);
+        }
+        System.out.println("─────────────────────────────────────────────────────────────────");
+        System.out.printf("  ORDER TOTAL: $%.2f%n", getCartTotal());
+        System.out.println("─────────────────────────────────────────────────────────────────");
+        System.out.println("  Thank you for your purchase! Your order has been placed.");
+        System.out.println("─────────────────────────────────────────────────────────────────");
+        cart.clear();
+    }
+
+    private double getCartTotal() {
+        double total = 0;
+        for (Product p : cart) {
+            total += p.getPrice();
+        }
+        return total;
     }
 }
