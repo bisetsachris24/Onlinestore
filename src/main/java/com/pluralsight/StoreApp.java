@@ -6,19 +6,19 @@ import java.util.Scanner;
 
 public class StoreApp {
 
-    private List<Product> inventory;
-    private List<Product> cart;
-    private Scanner scanner;
+    private final List<Product> inventory;
+    private final List<Product> cart;
+     Scanner theScanner = new Scanner(System.in);
 
     public StoreApp(List<Product> inventory) {
         this.inventory = inventory;
         this.cart = new ArrayList<>();
-        this.scanner = new Scanner(System.in);
+        this.theScanner = new Scanner(System.in);
     }
 
-    // ─────────────────────────────────────────────
+
     //  SCREEN 1 – HOME SCREEN
-    // ─────────────────────────────────────────────
+
     public void showHomeScreen() {
         boolean running = true;
 
@@ -32,7 +32,7 @@ public class StoreApp {
             System.out.println("─────────────────────────────────");
             System.out.print("Choose an option: ");
 
-            String choice = scanner.nextLine().trim();
+            String choice = theScanner.nextLine().trim();
 
             switch (choice) {
                 case "1":
@@ -51,9 +51,9 @@ public class StoreApp {
         }
     }
 
-    // ─────────────────────────────────────────────
+
     //  SCREEN 2 – DISPLAY PRODUCTS
-    // ─────────────────────────────────────────────
+
     private void showProductsScreen() {
         boolean onProductsScreen = true;
         List<Product> displayList = new ArrayList<>(inventory);
@@ -74,7 +74,7 @@ public class StoreApp {
             System.out.println("─────────────────────────────────────────────────────────────────");
             System.out.print("Choose an option: ");
 
-            String choice = scanner.nextLine().trim().toUpperCase();
+            String choice = theScanner.nextLine().trim().toUpperCase();
 
             switch (choice) {
                 case "S":
@@ -103,13 +103,13 @@ public class StoreApp {
         System.out.println("─────────────────────────────────");
         System.out.print("Choose an option: ");
 
-        String choice = scanner.nextLine().trim();
+        String choice = theScanner.nextLine().trim();
         List<Product> results = new ArrayList<>();
 
         switch (choice) {
             case "1":
                 System.out.print("Enter product name to search: ");
-                String name = scanner.nextLine().trim().toLowerCase();
+                String name = theScanner.nextLine().trim().toLowerCase();
                 for (Product p : inventory) {
                     if (p.getName().toLowerCase().contains(name)) {
                         results.add(p);
@@ -121,7 +121,7 @@ public class StoreApp {
             case "2":
                 System.out.print("Enter maximum price: $");
                 try {
-                    double maxPrice = Double.parseDouble(scanner.nextLine().trim());
+                    double maxPrice = Double.parseDouble(theScanner.nextLine().trim());
                     for (Product p : inventory) {
                         if (p.getPrice() <= maxPrice) {
                             results.add(p);
@@ -136,7 +136,7 @@ public class StoreApp {
 
             case "3":
                 System.out.print("Enter department: ");
-                String dept = scanner.nextLine().trim().toLowerCase();
+                String dept = theScanner.nextLine().trim().toLowerCase();
                 for (Product p : inventory) {
                     if (p.getDepartment().toLowerCase().contains(dept)) {
                         results.add(p);
@@ -157,7 +157,7 @@ public class StoreApp {
 
     private void addProductToCart(List<Product> displayList) {
         System.out.print("Enter the SKU of the product to add: ");
-        String sku = scanner.nextLine().trim().toUpperCase();
+        String sku = theScanner.nextLine().trim().toUpperCase();
 
         for (Product p : displayList) {
             if (p.getSku().equalsIgnoreCase(sku)) {
@@ -199,7 +199,7 @@ public class StoreApp {
             System.out.println("─────────────────────────────────────────────────────────────────");
             System.out.print("Choose an option: ");
 
-            String choice = scanner.nextLine().trim().toUpperCase();
+            String choice = theScanner.nextLine().trim().toUpperCase();
 
             switch (choice) {
                 case "C":
@@ -224,7 +224,7 @@ public class StoreApp {
             return;
         }
         System.out.print("Enter the SKU of the product to remove: ");
-        String sku = scanner.nextLine().trim().toUpperCase();
+        String sku = theScanner.nextLine().trim().toUpperCase();
 
         for (int i = 0; i < cart.size(); i++) {
             if (cart.get(i).getSku().equalsIgnoreCase(sku)) {
